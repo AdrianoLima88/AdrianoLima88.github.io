@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <link rel="preload" as="image" href="assets/img/hero-image.jpg">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+/* Main hero container */
+.hero {
+    @apply relative isolate flex w-full items-center overflow-hidden px-6 py-16 md:px-16 md:py-24;
+}
+
+/* Decorative image background */
+.hero-image-layer {
+    @apply absolute inset-0 z-0;
+    background-image: url("assets/img/hero-image.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+/* Tinted overlay layer */
+.hero-overlay {
+    @apply pointer-events-none absolute inset-0 z-10;
+    background-color: var(--color-black);
+    background-image: none;
+    opacity: 0.4;
+    background-image: linear-gradient(to right, var(--color-black), var(--color-blue-500));
+}
+
+/* Hero text content */
+.hero-content {
+    @apply relative z-20 w-full max-w-5xl;
+}
+
+/* Centre alignment */
+.hero-centre {
+    @apply text-center;
+}
+.hero-centre .hero-content {
+    margin-inline: auto;
+}
+
+/* Minimum height */
+.hero-min-height {
+    @apply min-h-[480px];
+}
+@media (min-width: 768px) {
+    .hero-min-height {
+        min-height: 85vh;
+    }
+}
+
+/* H1 typography and shadow */
+.hero h1 {
+    @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl text-shadow-lg/30;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    color: var(--color-white);
+}
+
+/* H2 typography and shadow */
+.hero h2 {
+    @apply mt-6 text-lg leading-relaxed md:text-2xl text-shadow-lg/30;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    color: var(--color-white);
+}
+
+/* Font families */
+.hero h1.hero-h1-sans {
+    @apply font-sans;
+}
+.hero h1.hero-h1-serif {
+    @apply font-serif;
+}
+.hero h2.hero-h2-sans {
+    @apply font-sans;
+}
+.hero h2.hero-h2-serif {
+    @apply font-serif;
+}
+
+/* Hidden subheading */
+.hero h2[hidden] {
+    display: none !important;
+}
+    </style>
+
+    <style type="text/tailwindcss">
+.hero h1 {
+    letter-spacing: -0.05em;
+}
+.hero h2 {
+    letter-spacing: -0.025em;
+}
+    </style>
+</head>
+<body>
+
+<header class="hero hero-centre hero-min-height">
+    <div class="hero-image-layer" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+        <h1 class="hero-h1-sans">Lorem ipsum dolor sit amet</h1>
+        <h2 class="hero-h2-sans">Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+    </div>
+</header>
+
+</body>
+</html>

@@ -1,0 +1,1998 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block Generator</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- SHARED HERO STYLES: Preview and exported HTML -->
+    <style id="heroStyles" type="text/tailwindcss">
+
+        .hero {
+            @apply flex items-center w-full px-6 py-16 md:px-16 md:py-24;
+        }
+
+        .hero-content {
+            @apply w-full max-w-5xl;
+        }
+
+        .hero-light {
+            @apply bg-slate-50;
+        }
+
+        .hero-light h1 {
+            @apply text-slate-900;
+        }
+
+        .hero-light h2 {
+            @apply text-slate-700;
+        }
+
+        .hero-dark {
+            @apply bg-slate-900;
+        }
+
+        .hero-dark h1 {
+            @apply text-slate-50;
+        }
+
+        .hero-dark h2 {
+            @apply text-slate-300;
+        }
+
+        .hero-centre {
+            @apply text-center;
+        }
+
+        .hero-centre .hero-content {
+            margin-inline: auto;
+        }
+
+        .hero-min-height {
+            @apply min-h-[480px];
+        }
+
+        @media (min-width: 768px) {
+            .hero-min-height {
+                min-height: 85vh;
+            }
+        }
+
+        .hero h1 {
+            @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .hero h2 {
+            @apply mt-6 text-lg leading-relaxed md:text-2xl;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .hero h1.hero-h1-sans {
+            @apply font-sans;
+        }
+
+        .hero h1.hero-h1-serif {
+            @apply font-serif;
+        }
+
+        .hero h2.hero-h2-sans {
+            @apply font-sans;
+        }
+
+        .hero h2.hero-h2-serif {
+            @apply font-serif;
+        }
+
+        .hero h2[hidden] {
+            display: none !important;
+        }
+
+        /* Independent solid colour settings */
+        .hero.hero-custom-colors:not(.hero-gradient) {
+            background-image: none;
+            background-color: var(--color-slate-50);
+        }
+
+        .hero.hero-custom-colors h1 {
+            color: var(--color-slate-900);
+        }
+
+        .hero.hero-custom-colors h2 {
+            color: var(--color-slate-700);
+        }
+
+        /* Gradient background */
+        .hero.hero-gradient {
+            background-image: linear-gradient(
+                to right,
+                var(--color-blue-500),
+                var(--color-blue-500)
+            );
+            background-color: transparent;
+        }
+
+        /* Letter spacing */
+        .hero h1 {
+            letter-spacing: -0.05em;
+        }
+
+        .hero h2 {
+            letter-spacing: -0.025em;
+        }
+
+    </style>
+
+    <!-- EDITOR-ONLY PALETTE SWATCH STYLES -->
+    <style id="paletteSwatchStyles"></style>
+
+    <!-- EDITOR INTERFACE STYLES -->
+    <style type="text/tailwindcss">
+
+        body {
+            @apply min-h-screen bg-white text-slate-800;
+        }
+
+        .app-container {
+            @apply mx-auto w-full max-w-7xl px-4 py-6 pb-24 md:px-8;
+        }
+
+        .app-title {
+            @apply mb-2 text-2xl font-bold tracking-tight text-slate-900;
+        }
+
+        .app-description {
+            @apply mb-6 text-sm text-slate-500;
+        }
+
+        .control-panel {
+            @apply mb-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm;
+        }
+
+        .control-heading {
+            @apply mb-3 text-sm font-semibold text-slate-800;
+        }
+
+        .control-list {
+            @apply flex flex-wrap items-center gap-x-6 gap-y-4;
+        }
+
+        .control-label {
+            @apply flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700;
+        }
+
+        .control-checkbox {
+            @apply h-4 w-4 cursor-pointer accent-blue-600;
+        }
+
+        .control-checkbox:focus-visible,
+        .control-slider:focus-visible,
+        .gradient-direction:focus-visible {
+            outline: 3px solid #3b82f6;
+            outline-offset: 3px;
+        }
+
+        /* Gradient controls */
+        .gradient-settings {
+            @apply mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4;
+        }
+
+        .gradient-direction-container {
+            @apply flex flex-wrap items-center gap-3;
+        }
+
+        .gradient-direction-label {
+            @apply text-sm font-semibold text-slate-700;
+        }
+
+        .gradient-direction {
+            @apply rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800;
+        }
+
+        /* Typography controls */
+        .effects-container {
+            @apply mt-5 grid grid-cols-1 gap-4 md:grid-cols-2;
+        }
+
+        .effect-group {
+            @apply rounded-lg border border-slate-200 bg-slate-50 p-4;
+        }
+
+        .effect-heading {
+            @apply mb-4 text-sm font-bold text-slate-800;
+        }
+
+        .effect-checkbox-label {
+            @apply mb-4 flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700;
+        }
+
+        .slider-container {
+            @apply flex flex-col gap-2;
+        }
+
+        .slider-header {
+            @apply flex items-center justify-between gap-2;
+        }
+
+        .slider-label {
+            @apply text-sm font-medium text-slate-700;
+        }
+
+        .slider-value {
+            @apply rounded-md bg-white px-2 py-1 font-mono text-xs font-semibold text-blue-700;
+        }
+
+        .control-slider {
+            @apply w-full cursor-pointer accent-blue-600;
+        }
+
+        .effect-group:has(input:disabled) {
+            @apply opacity-60;
+        }
+
+        /* Colour palette */
+        .palette-section {
+            @apply mt-6 border-t border-slate-200 pt-5;
+            min-width: 0;
+        }
+
+        .palette-heading {
+            @apply mb-3 text-sm font-bold text-slate-800;
+        }
+
+        .palette-targets {
+            @apply mb-4 flex flex-wrap gap-2;
+        }
+
+        .target-button {
+            @apply flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700;
+        }
+
+        .target-button:hover:not(:disabled) {
+            @apply bg-slate-100;
+        }
+
+        .target-button.active {
+            @apply border-blue-600 bg-blue-50 text-blue-800;
+            box-shadow: inset 0 0 0 1px #2563eb;
+        }
+
+        .target-button:focus-visible {
+            outline: 3px solid #3b82f6;
+            outline-offset: 3px;
+        }
+
+        .target-button:disabled {
+            @apply cursor-not-allowed opacity-40;
+        }
+
+        .target-colour-name {
+            @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs;
+        }
+
+        .palette-description {
+            @apply mb-3 text-xs text-slate-500;
+        }
+
+        .palette-scroll {
+            max-width: 100%;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            padding-bottom: 12px;
+            scrollbar-width: thin;
+        }
+
+        .palette-grid {
+            min-width: 430px;
+            width: max-content;
+        }
+
+        .palette-row {
+            display: grid;
+            grid-template-columns: 82px repeat(11, 30px);
+            gap: 3px;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .palette-column-heading {
+            @apply text-center text-xs font-semibold text-slate-500;
+            width: 30px;
+        }
+
+        .palette-family {
+            @apply text-xs font-medium text-slate-700;
+            white-space: nowrap;
+        }
+
+        .palette-swatch {
+            width: 30px;
+            height: 27px;
+            border: 1px solid rgba(100, 116, 139, 0.25);
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .palette-swatch:hover {
+            outline: 2px solid #64748b;
+            outline-offset: 1px;
+        }
+
+        .palette-swatch:focus-visible {
+            outline: 3px solid #2563eb;
+            outline-offset: 2px;
+            z-index: 2;
+        }
+
+        .palette-swatch.selected {
+            outline: 3px solid #2563eb;
+            outline-offset: 1px;
+            z-index: 1;
+        }
+
+        .palette-swatch.selected::after {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 2px #334155;
+        }
+
+        .special-colour-label {
+            @apply mt-3 mb-2 text-xs font-semibold text-slate-600;
+        }
+
+        .special-colours {
+            @apply flex items-center gap-3;
+        }
+
+        .instruction {
+            @apply mb-3 text-sm text-slate-500;
+        }
+
+        .preview-container {
+            @apply overflow-hidden rounded-xl border border-slate-200 shadow-sm;
+        }
+
+        .editable-heading {
+            cursor: text;
+        }
+
+        .editable-heading:focus {
+            outline: 3px solid #3b82f6;
+            outline-offset: 5px;
+            border-radius: 3px;
+        }
+
+        .export-button {
+            @apply fixed bottom-5 right-5 z-50 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800;
+        }
+
+        .export-button:focus-visible {
+            outline: 3px solid #2563eb;
+            outline-offset: 4px;
+        }
+
+        .status-message {
+            @apply mt-4 text-sm font-medium text-slate-700;
+        }
+
+        .fallback-container {
+            @apply mt-5 rounded-xl border border-slate-200 bg-white p-4;
+        }
+
+        .fallback-label {
+            @apply mb-2 block text-sm font-semibold text-slate-800;
+        }
+
+        .fallback-textarea {
+            @apply w-full rounded-lg border border-slate-300 p-3 font-mono text-xs text-slate-800;
+        }
+
+        .fallback-textarea:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="app-container">
+
+        <!-- APPLICATION INTRODUCTION -->
+        <section aria-labelledby="app-title">
+
+            <h1 id="app-title" class="app-title">
+                Hero Block Generator
+            </h1>
+
+            <p class="app-description">
+                Create and customise a responsive hero section using Tailwind CSS.
+            </p>
+
+        </section>
+
+
+        <!-- GENERAL HERO SETTINGS -->
+        <section class="control-panel" aria-labelledby="control-heading">
+
+            <h2 id="control-heading" class="control-heading">
+                Hero settings
+            </h2>
+
+            <div class="control-list">
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="darkAppearance"
+                        class="control-checkbox"
+                    >
+                    Dark appearance preset
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="centreText"
+                        class="control-checkbox"
+                    >
+                    Centre text
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="minimumHeight"
+                        class="control-checkbox"
+                        checked
+                    >
+                    Minimum height
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="showSubheading"
+                        class="control-checkbox"
+                        checked
+                    >
+                    Show subheading
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="gradientBackground"
+                        class="control-checkbox"
+                    >
+                    Gradient background
+                </label>
+
+            </div>
+
+
+            <!-- GRADIENT DIRECTION -->
+            <section
+                id="gradientSettings"
+                class="gradient-settings"
+                hidden
+                aria-labelledby="gradientHeading"
+            >
+
+                <h3 id="gradientHeading" class="effect-heading">
+                    Gradient settings
+                </h3>
+
+                <div class="gradient-direction-container">
+
+                    <label
+                        for="gradientDirection"
+                        class="gradient-direction-label"
+                    >
+                        Direction
+                    </label>
+
+                    <select
+                        id="gradientDirection"
+                        class="gradient-direction"
+                    >
+                        <option value="to right">Left to right</option>
+                        <option value="to left">Right to left</option>
+                        <option value="to bottom">Top to bottom</option>
+                        <option value="to top">Bottom to top</option>
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- TEXT EFFECT CONTROLS -->
+            <div class="effects-container">
+
+                <section class="effect-group" aria-labelledby="h1EffectsTitle">
+
+                    <h3 id="h1EffectsTitle" class="effect-heading">
+                        H1 text effects
+                    </h3>
+
+                    <label class="effect-checkbox-label">
+                        <input
+                            type="checkbox"
+                            id="h1SerifFont"
+                            class="control-checkbox"
+                        >
+                        Serif font
+                    </label>
+
+                    <div class="slider-container">
+
+                        <div class="slider-header">
+
+                            <label for="h1LetterSpacing" class="slider-label">
+                                Letter spacing
+                            </label>
+
+                            <output
+                                id="h1SpacingValue"
+                                class="slider-value"
+                                for="h1LetterSpacing"
+                            >-0.05em</output>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="h1LetterSpacing"
+                            class="control-slider"
+                            min="-0.05"
+                            max="0.10"
+                            step="0.005"
+                            value="-0.05"
+                        >
+
+                    </div>
+
+                </section>
+
+
+                <section class="effect-group" aria-labelledby="h2EffectsTitle">
+
+                    <h3 id="h2EffectsTitle" class="effect-heading">
+                        H2 text effects
+                    </h3>
+
+                    <label class="effect-checkbox-label">
+                        <input
+                            type="checkbox"
+                            id="h2SerifFont"
+                            class="control-checkbox"
+                        >
+                        Serif font
+                    </label>
+
+                    <div class="slider-container">
+
+                        <div class="slider-header">
+
+                            <label for="h2LetterSpacing" class="slider-label">
+                                Letter spacing
+                            </label>
+
+                            <output
+                                id="h2SpacingValue"
+                                class="slider-value"
+                                for="h2LetterSpacing"
+                            >-0.025em</output>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="h2LetterSpacing"
+                            class="control-slider"
+                            min="-0.05"
+                            max="0.10"
+                            step="0.005"
+                            value="-0.025"
+                        >
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- COLOUR PALETTE -->
+            <section class="palette-section" aria-labelledby="paletteHeading">
+
+                <h3 id="paletteHeading" class="palette-heading">
+                    Hero colour palette
+                </h3>
+
+                <p class="palette-description">
+                    Select a target, then choose a colour from the palette.
+                </p>
+
+                <div class="palette-targets">
+
+                    <button
+                        type="button"
+                        class="target-button active"
+                        id="backgroundTarget"
+                        aria-pressed="true"
+                    >
+                        Background
+                        <span id="backgroundColourName" class="target-colour-name">
+                            slate-50
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="target-button"
+                        id="startTarget"
+                        hidden
+                        aria-pressed="false"
+                    >
+                        Start colour
+                        <span id="startColourName" class="target-colour-name">
+                            slate-50
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="target-button"
+                        id="endTarget"
+                        hidden
+                        aria-pressed="false"
+                    >
+                        End colour
+                        <span id="endColourName" class="target-colour-name">
+                            blue-500
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="target-button"
+                        id="h1Target"
+                        aria-pressed="false"
+                    >
+                        H1
+                        <span id="h1ColourName" class="target-colour-name">
+                            slate-900
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="target-button"
+                        id="h2Target"
+                        aria-pressed="false"
+                    >
+                        H2
+                        <span id="h2ColourName" class="target-colour-name">
+                            slate-700
+                        </span>
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="palette-scroll"
+                    tabindex="0"
+                    aria-label="Scrollable Tailwind colour palette"
+                >
+
+                    <div class="palette-grid" id="paletteGrid">
+                    </div>
+
+                </div>
+
+                <p class="special-colour-label">
+                    Special colours
+                </p>
+
+                <div class="special-colours" id="specialColours">
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- EDITING INSTRUCTIONS -->
+        <p class="instruction">
+            Click a heading to edit the text.
+        </p>
+
+
+        <!-- HERO PREVIEW -->
+        <section class="preview-container" aria-label="Hero preview">
+
+            <header
+                id="heroPreview"
+                class="hero hero-light hero-min-height hero-custom-colors"
+            >
+
+                <div class="hero-content">
+
+                    <h1
+                        id="heroHeading"
+                        class="editable-heading hero-h1-sans"
+                        contenteditable="true"
+                        role="textbox"
+                        aria-label="Edit hero main heading"
+                        aria-multiline="true"
+                        spellcheck="false"
+                    >Lorem ipsum dolor sit amet</h1>
+
+                    <h2
+                        id="heroSubheading"
+                        class="editable-heading hero-h2-sans"
+                        contenteditable="true"
+                        role="textbox"
+                        aria-label="Edit hero subheading"
+                        aria-multiline="true"
+                        spellcheck="false"
+                    >Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+
+                </div>
+
+            </header>
+
+        </section>
+
+
+        <!-- COPY FEEDBACK -->
+        <p
+            id="statusMessage"
+            class="status-message"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+
+        <!-- MANUAL COPY FALLBACK -->
+        <section
+            id="fallbackContainer"
+            class="fallback-container"
+            hidden
+            aria-labelledby="fallbackLabel"
+        >
+
+            <label
+                id="fallbackLabel"
+                for="fallbackTextarea"
+                class="fallback-label"
+            >
+                Copy your HTML manually
+            </label>
+
+            <textarea
+                id="fallbackTextarea"
+                class="fallback-textarea"
+                rows="12"
+                readonly
+                spellcheck="false"
+            ></textarea>
+
+            <p class="mt-2 text-xs text-slate-500">
+                Select the HTML above and copy it into a new HTML file.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FIXED COPY BUTTON -->
+    <button
+        type="button"
+        id="copyButton"
+        class="export-button"
+    >
+        Copy HTML
+    </button>
+
+
+    <script>
+
+        // ==========================================
+        // 1. GET HTML ELEMENTS
+        // ==========================================
+
+        const heroPreview = document.getElementById("heroPreview");
+
+        const heroHeading = document.getElementById("heroHeading");
+
+        const heroSubheading = document.getElementById("heroSubheading");
+
+        // General settings
+        const darkAppearance = document.getElementById("darkAppearance");
+
+        const centreText = document.getElementById("centreText");
+
+        const minimumHeight = document.getElementById("minimumHeight");
+
+        const showSubheading = document.getElementById("showSubheading");
+
+        const gradientBackground = document.getElementById("gradientBackground");
+
+        const gradientSettings = document.getElementById("gradientSettings");
+
+        const gradientDirection = document.getElementById("gradientDirection");
+
+        // H1 effects
+        const h1SerifFont = document.getElementById("h1SerifFont");
+
+        const h1LetterSpacing = document.getElementById("h1LetterSpacing");
+
+        const h1SpacingValue = document.getElementById("h1SpacingValue");
+
+        // H2 effects
+        const h2SerifFont = document.getElementById("h2SerifFont");
+
+        const h2LetterSpacing = document.getElementById("h2LetterSpacing");
+
+        const h2SpacingValue = document.getElementById("h2SpacingValue");
+
+        // Colour targets
+        const backgroundTarget = document.getElementById("backgroundTarget");
+
+        const startTarget = document.getElementById("startTarget");
+
+        const endTarget = document.getElementById("endTarget");
+
+        const h1Target = document.getElementById("h1Target");
+
+        const h2Target = document.getElementById("h2Target");
+
+        // Colour name labels
+        const backgroundColourName = document.getElementById("backgroundColourName");
+
+        const startColourName = document.getElementById("startColourName");
+
+        const endColourName = document.getElementById("endColourName");
+
+        const h1ColourName = document.getElementById("h1ColourName");
+
+        const h2ColourName = document.getElementById("h2ColourName");
+
+        // Palette elements
+        const paletteGrid = document.getElementById("paletteGrid");
+
+        const specialColours = document.getElementById("specialColours");
+
+        const paletteSwatchStyles = document.getElementById("paletteSwatchStyles");
+
+        // Shared stylesheet
+        const heroStyles = document.getElementById("heroStyles");
+
+        // Other elements
+        const copyButton = document.getElementById("copyButton");
+
+        const statusMessage = document.getElementById("statusMessage");
+
+        const fallbackContainer = document.getElementById("fallbackContainer");
+
+        const fallbackTextarea = document.getElementById("fallbackTextarea");
+
+
+        // ==========================================
+        // 2. SETTINGS OBJECT
+        // ==========================================
+
+        const settings = {
+
+            // General settings
+            darkAppearance: false,
+            centreText: false,
+            minimumHeight: true,
+            showSubheading: true,
+
+            // Gradient settings
+            gradientEnabled: false,
+            gradientInitialized: false,
+            gradientStartColor: null,
+            gradientEndColor: null,
+            gradientDirection: "to right",
+
+            // Solid background colour
+            backgroundColor: "slate-50",
+
+            // Heading colours
+            h1Color: "slate-900",
+            h2Color: "slate-700",
+
+            // H1 effects
+            h1SerifFont: false,
+            h1LetterSpacing: -0.05,
+
+            // H2 effects
+            h2SerifFont: false,
+            h2LetterSpacing: -0.025,
+
+            // Active palette target
+            activeTarget: "background"
+
+        };
+
+
+        // ==========================================
+        // 3. TAILWIND COLOUR PALETTE
+        // ==========================================
+
+        const colourShades = [
+            "50", "100", "200", "300", "400", "500",
+            "600", "700", "800", "900", "950"
+        ];
+
+        const colourFamilies = [
+            "slate", "gray", "zinc", "neutral", "stone",
+            "red", "orange", "amber", "yellow", "lime",
+            "green", "emerald", "teal", "cyan", "sky",
+            "blue", "indigo", "violet", "purple", "fuchsia",
+            "pink", "rose"
+        ];
+
+
+        // ==========================================
+        // 4. READ CURRENT SETTINGS
+        // ==========================================
+
+        function readSettings() {
+
+            settings.darkAppearance = darkAppearance.checked;
+
+            settings.centreText = centreText.checked;
+
+            settings.minimumHeight = minimumHeight.checked;
+
+            settings.showSubheading = showSubheading.checked;
+
+            settings.gradientEnabled = gradientBackground.checked;
+
+            settings.gradientDirection = gradientDirection.value;
+
+            settings.h1SerifFont = h1SerifFont.checked;
+
+            settings.h2SerifFont = h2SerifFont.checked;
+
+            settings.h1LetterSpacing = Number(h1LetterSpacing.value);
+
+            settings.h2LetterSpacing = Number(h2LetterSpacing.value);
+
+        }
+
+
+        // ==========================================
+        // 5. FORMAT LETTER SPACING
+        // ==========================================
+
+        function formatLetterSpacing(value) {
+
+            return Number(value).toFixed(3)
+                .replace(/0+$/, "")
+                .replace(/\.$/, "") + "em";
+
+        }
+
+
+        // ==========================================
+        // 6. GENERATE COLOUR PALETTE
+        // ==========================================
+
+        function generatePalette() {
+
+            // Generate column headings.
+            const headerRow = document.createElement("div");
+
+            headerRow.className = "palette-row";
+
+            const familyHeading = document.createElement("span");
+
+            familyHeading.className = "palette-family";
+
+            familyHeading.textContent = "Family";
+
+            headerRow.appendChild(familyHeading);
+
+            colourShades.forEach(shade => {
+
+                const heading = document.createElement("span");
+
+                heading.className = "palette-column-heading";
+
+                heading.textContent = shade;
+
+                headerRow.appendChild(heading);
+
+            });
+
+            paletteGrid.appendChild(headerRow);
+
+
+            // Generate each colour family.
+            colourFamilies.forEach(family => {
+
+                const row = document.createElement("div");
+
+                row.className = "palette-row";
+
+                const familyLabel = document.createElement("span");
+
+                familyLabel.className = "palette-family";
+
+                familyLabel.textContent = family;
+
+                row.appendChild(familyLabel);
+
+                colourShades.forEach(shade => {
+
+                    const colourName = `${family}-${shade}`;
+
+                    row.appendChild(createSwatch(colourName));
+
+                });
+
+                paletteGrid.appendChild(row);
+
+            });
+
+
+            // Add black and white separately.
+            ["black", "white"].forEach(colourName => {
+
+                specialColours.appendChild(createSwatch(colourName));
+
+            });
+
+            generateSwatchCSS();
+
+            updatePaletteSelection();
+
+        }
+
+
+        // ==========================================
+        // 7. CREATE ACCESSIBLE COLOUR SWATCH
+        // ==========================================
+
+        function createSwatch(colourName) {
+
+            const button = document.createElement("button");
+
+            button.type = "button";
+
+            button.className = "palette-swatch";
+
+            button.dataset.color = colourName;
+
+            button.setAttribute(
+                "aria-label",
+                `Select Tailwind colour ${colourName}`
+            );
+
+            button.setAttribute("aria-pressed", "false");
+
+            button.title = colourName;
+
+            button.addEventListener("click", () => {
+
+                applyPaletteColour(colourName);
+
+            });
+
+            return button;
+
+        }
+
+
+        // ==========================================
+        // 8. GENERATE SWATCH CSS
+        // ==========================================
+
+        function generateSwatchCSS() {
+
+            const allColours = [];
+
+            colourFamilies.forEach(family => {
+
+                colourShades.forEach(shade => {
+
+                    allColours.push(`${family}-${shade}`);
+
+                });
+
+            });
+
+            allColours.push("black", "white");
+
+            const cssRules = allColours.map(colourName => {
+
+                return `
+.palette-swatch[data-color="${colourName}"] {
+    background-color: var(--color-${colourName});
+}
+                `.trim();
+
+            });
+
+            paletteSwatchStyles.textContent = cssRules.join("\n");
+
+        }
+
+
+        // ==========================================
+        // 9. SELECT ACTIVE PALETTE TARGET
+        // ==========================================
+
+        function selectTarget(target) {
+
+            // Only select visible and enabled targets.
+            if (target === "h2" && !settings.showSubheading) {
+                return;
+            }
+
+            if (target === "background" && settings.gradientEnabled) {
+                return;
+            }
+
+            if (
+                (target === "start" || target === "end") &&
+                !settings.gradientEnabled
+            ) {
+                return;
+            }
+
+            settings.activeTarget = target;
+
+            updateTargetButtons();
+
+            updatePaletteSelection();
+
+        }
+
+
+        // ==========================================
+        // 10. UPDATE TARGET BUTTONS
+        // ==========================================
+
+        function updateTargetButtons() {
+
+            // Solid background is visible only in solid mode.
+            backgroundTarget.hidden = settings.gradientEnabled;
+
+            // Gradient targets are visible only in gradient mode.
+            startTarget.hidden = !settings.gradientEnabled;
+
+            endTarget.hidden = !settings.gradientEnabled;
+
+            // H2 target is available only when H2 is visible.
+            h2Target.hidden = !settings.showSubheading;
+
+            // Update displayed colour names.
+            backgroundColourName.textContent = settings.backgroundColor;
+
+            startColourName.textContent = settings.gradientStartColor || "slate-50";
+
+            endColourName.textContent = settings.gradientEndColor || "blue-500";
+
+            h1ColourName.textContent = settings.h1Color;
+
+            h2ColourName.textContent = settings.h2Color;
+
+            // Describe the available targets.
+            const targets = [
+                [backgroundTarget, "background"],
+                [startTarget, "start"],
+                [endTarget, "end"],
+                [h1Target, "h1"],
+                [h2Target, "h2"]
+            ];
+
+            targets.forEach(([button, name]) => {
+
+                const active = settings.activeTarget === name;
+
+                button.classList.toggle("active", active);
+
+                button.setAttribute("aria-pressed", String(active));
+
+                button.disabled = button.hidden;
+
+            });
+
+        }
+
+
+        // ==========================================
+        // 11. UPDATE SELECTED SWATCH
+        // ==========================================
+
+        function updatePaletteSelection() {
+
+            let selectedColour;
+
+            switch (settings.activeTarget) {
+
+                case "background":
+                    selectedColour = settings.backgroundColor;
+                    break;
+
+                case "start":
+                    selectedColour = settings.gradientStartColor;
+                    break;
+
+                case "end":
+                    selectedColour = settings.gradientEndColor;
+                    break;
+
+                case "h1":
+                    selectedColour = settings.h1Color;
+                    break;
+
+                case "h2":
+                    selectedColour = settings.h2Color;
+                    break;
+
+            }
+
+            const allSwatches =
+                document.querySelectorAll(".palette-swatch");
+
+            allSwatches.forEach(swatch => {
+
+                const selected =
+                    swatch.dataset.color === selectedColour;
+
+                swatch.classList.toggle("selected", selected);
+
+                swatch.setAttribute("aria-pressed", String(selected));
+
+            });
+
+        }
+
+
+        // ==========================================
+        // 12. APPLY SELECTED COLOUR
+        // ==========================================
+
+        function applyPaletteColour(colourName) {
+
+            // Change only the currently active target.
+            switch (settings.activeTarget) {
+
+                case "background":
+                    settings.backgroundColor = colourName;
+                    break;
+
+                case "start":
+                    settings.gradientStartColor = colourName;
+                    break;
+
+                case "end":
+                    settings.gradientEndColor = colourName;
+                    break;
+
+                case "h1":
+                    settings.h1Color = colourName;
+                    break;
+
+                case "h2":
+                    settings.h2Color = colourName;
+                    break;
+
+            }
+
+            updateHero();
+
+        }
+
+
+        // ==========================================
+        // 13. INITIALISE GRADIENT
+        // ==========================================
+
+        function initialiseGradient() {
+
+            // Run only the first time gradient mode is enabled.
+            if (settings.gradientInitialized) {
+                return;
+            }
+
+            // Use the current solid colour as the starting colour.
+            settings.gradientStartColor = settings.backgroundColor;
+
+            // Use blue-500 as the default ending colour.
+            settings.gradientEndColor = "blue-500";
+
+            // Set the default direction.
+            settings.gradientDirection = "to right";
+
+            gradientDirection.value = settings.gradientDirection;
+
+            settings.gradientInitialized = true;
+
+        }
+
+
+        // ==========================================
+        // 14. HANDLE GRADIENT MODE
+        // ==========================================
+
+        function handleGradientChange() {
+
+            readSettings();
+
+            if (settings.gradientEnabled) {
+
+                // Initialise colours only on first activation.
+                initialiseGradient();
+
+                // Show gradient direction settings.
+                gradientSettings.hidden = false;
+
+                // Background is replaced by Start colour.
+                if (settings.activeTarget === "background") {
+
+                    settings.activeTarget = "start";
+
+                }
+
+            } else {
+
+                // Hide gradient direction settings.
+                gradientSettings.hidden = true;
+
+                // Restore solid background selection.
+                if (
+                    settings.activeTarget === "start" ||
+                    settings.activeTarget === "end"
+                ) {
+
+                    settings.activeTarget = "background";
+
+                }
+
+            }
+
+            updateHero();
+
+        }
+
+
+        // ==========================================
+        // 15. HANDLE DARK/LIGHT PRESET
+        // ==========================================
+
+        function handlePresetChange() {
+
+            readSettings();
+
+            if (settings.darkAppearance) {
+
+                // Reset solid background and heading colours.
+                settings.backgroundColor = "slate-900";
+
+                settings.h1Color = "slate-50";
+
+                settings.h2Color = "slate-300";
+
+            } else {
+
+                // Restore light preset colours.
+                settings.backgroundColor = "slate-50";
+
+                settings.h1Color = "slate-900";
+
+                settings.h2Color = "slate-700";
+
+            }
+
+            // Gradient colours and direction are not changed.
+            updateHero();
+
+        }
+
+
+        // ==========================================
+        // 16. GENERATE SHARED HERO CSS
+        // ==========================================
+
+        function generateHeroCSS() {
+
+            // Choose the correct solid background.
+            const solidBackgroundCSS = `
+.hero.hero-custom-colors:not(.hero-gradient) {
+    background-image: none;
+    background-color: var(--color-${settings.backgroundColor});
+}
+            `.trim();
+
+            // Choose the gradient or solid background.
+            let gradientCSS = "";
+
+            if (settings.gradientEnabled) {
+
+                gradientCSS = `
+.hero.hero-gradient {
+    background-image: linear-gradient(
+        ${settings.gradientDirection},
+        var(--color-${settings.gradientStartColor}),
+        var(--color-${settings.gradientEndColor})
+    );
+    background-color: transparent;
+}
+                `.trim();
+
+            } else {
+
+                gradientCSS = `
+.hero.hero-custom-colors:not(.hero-gradient) {
+    background-image: none;
+}
+                `.trim();
+
+            }
+
+            return `
+
+/* Main hero container */
+.hero {
+    @apply flex items-center w-full px-6 py-16 md:px-16 md:py-24;
+}
+
+/* Content container */
+.hero-content {
+    @apply w-full max-w-5xl;
+}
+
+/* Light preset */
+.hero-light {
+    @apply bg-slate-50;
+}
+
+.hero-light h1 {
+    @apply text-slate-900;
+}
+
+.hero-light h2 {
+    @apply text-slate-700;
+}
+
+/* Dark preset */
+.hero-dark {
+    @apply bg-slate-900;
+}
+
+.hero-dark h1 {
+    @apply text-slate-50;
+}
+
+.hero-dark h2 {
+    @apply text-slate-300;
+}
+
+/* Centre alignment */
+.hero-centre {
+    @apply text-center;
+}
+
+.hero-centre .hero-content {
+    margin-inline: auto;
+}
+
+/* Minimum height */
+.hero-min-height {
+    @apply min-h-[480px];
+}
+
+@media (min-width: 768px) {
+    .hero-min-height {
+        min-height: 85vh;
+    }
+}
+
+/* H1 typography */
+.hero h1 {
+    @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* H2 typography */
+.hero h2 {
+    @apply mt-6 text-lg leading-relaxed md:text-2xl;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* H1 font families */
+.hero h1.hero-h1-sans {
+    @apply font-sans;
+}
+
+.hero h1.hero-h1-serif {
+    @apply font-serif;
+}
+
+/* H2 font families */
+.hero h2.hero-h2-sans {
+    @apply font-sans;
+}
+
+.hero h2.hero-h2-serif {
+    @apply font-serif;
+}
+
+/* Hidden subheading */
+.hero h2[hidden] {
+    display: none !important;
+}
+
+/* Independent solid colours */
+${solidBackgroundCSS}
+
+.hero.hero-custom-colors h1 {
+    color: var(--color-${settings.h1Color});
+}
+
+.hero.hero-custom-colors h2 {
+    color: var(--color-${settings.h2Color});
+}
+
+/* Gradient background */
+${gradientCSS}
+
+/* Heading letter spacing */
+.hero h1 {
+    letter-spacing: ${settings.h1LetterSpacing}em;
+}
+
+.hero h2 {
+    letter-spacing: ${settings.h2LetterSpacing}em;
+}
+
+            `.trim();
+
+        }
+
+
+        // ==========================================
+        // 17. UPDATE HERO STYLESHEET
+        // ==========================================
+
+        function updateHeroStyles() {
+
+            // Shared CSS is used by preview and exported page.
+            heroStyles.textContent = generateHeroCSS();
+
+        }
+
+
+        // ==========================================
+        // 18. UPDATE HERO PREVIEW
+        // ==========================================
+
+        function updateHero() {
+
+            readSettings();
+
+            // Update light/dark preset classes.
+            heroPreview.classList.toggle(
+                "hero-dark",
+                settings.darkAppearance
+            );
+
+            heroPreview.classList.toggle(
+                "hero-light",
+                !settings.darkAppearance
+            );
+
+            // Update alignment.
+            heroPreview.classList.toggle(
+                "hero-centre",
+                settings.centreText
+            );
+
+            // Update minimum height.
+            heroPreview.classList.toggle(
+                "hero-min-height",
+                settings.minimumHeight
+            );
+
+            // Keep the shared custom colour class.
+            heroPreview.classList.add("hero-custom-colors");
+
+            // Enable or disable gradient class.
+            heroPreview.classList.toggle(
+                "hero-gradient",
+                settings.gradientEnabled
+            );
+
+            // Update H1 font.
+            heroHeading.classList.toggle(
+                "hero-h1-serif",
+                settings.h1SerifFont
+            );
+
+            heroHeading.classList.toggle(
+                "hero-h1-sans",
+                !settings.h1SerifFont
+            );
+
+            // Update H2 font.
+            heroSubheading.classList.toggle(
+                "hero-h2-serif",
+                settings.h2SerifFont
+            );
+
+            heroSubheading.classList.toggle(
+                "hero-h2-sans",
+                !settings.h2SerifFont
+            );
+
+            // Show or hide H2 without deleting its content.
+            heroSubheading.hidden = !settings.showSubheading;
+
+            // Disable H2 effect controls when hidden.
+            h2SerifFont.disabled = !settings.showSubheading;
+
+            h2LetterSpacing.disabled = !settings.showSubheading;
+
+            // If H2 is active and hidden, select the correct background target.
+            if (
+                !settings.showSubheading &&
+                settings.activeTarget === "h2"
+            ) {
+
+                settings.activeTarget =
+                    settings.gradientEnabled ? "start" : "background";
+
+            }
+
+            // Update the gradient direction setting.
+            gradientDirection.value = settings.gradientDirection;
+
+            gradientSettings.hidden = !settings.gradientEnabled;
+
+            // Update letter spacing labels.
+            h1SpacingValue.textContent =
+                formatLetterSpacing(settings.h1LetterSpacing);
+
+            h2SpacingValue.textContent =
+                formatLetterSpacing(settings.h2LetterSpacing);
+
+            // Update shared styles.
+            updateHeroStyles();
+
+            // Update palette controls.
+            updateTargetButtons();
+
+            updatePaletteSelection();
+
+            // Update manual export.
+            updateFallbackHTML();
+
+        }
+
+
+        // ==========================================
+        // 19. ESCAPE HTML TEXT
+        // ==========================================
+
+        function escapeHTML(text) {
+
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+
+        }
+
+
+        // ==========================================
+        // 20. GENERATE EXPORTED HERO HTML
+        // ==========================================
+
+        function generateHeroHTML() {
+
+            // Read current heading text.
+            const headingText = escapeHTML(heroHeading.textContent);
+
+            const subheadingText = escapeHTML(heroSubheading.textContent);
+
+            // Build hero classes.
+            const heroClasses = [
+                "hero",
+                "hero-custom-colors",
+                settings.darkAppearance ? "hero-dark" : "hero-light",
+                settings.centreText ? "hero-centre" : "",
+                settings.minimumHeight ? "hero-min-height" : "",
+                settings.gradientEnabled ? "hero-gradient" : ""
+            ].filter(Boolean).join(" ");
+
+            // H1 font.
+            const h1FontClass = settings.h1SerifFont
+                ? "hero-h1-serif"
+                : "hero-h1-sans";
+
+            // H2 font.
+            const h2FontClass = settings.h2SerifFont
+                ? "hero-h2-serif"
+                : "hero-h2-sans";
+
+            // Include H2 only when enabled.
+            let subheadingHTML = "";
+
+            if (settings.showSubheading) {
+
+                subheadingHTML = `
+        <h2 class="${h2FontClass}">${subheadingText}</h2>
+                `.trim();
+
+            }
+
+            return `
+<header class="${heroClasses}">
+    <div class="hero-content">
+        <h1 class="${h1FontClass}">${headingText}</h1>
+        ${subheadingHTML}
+    </div>
+</header>
+            `.trim();
+
+        }
+
+
+        // ==========================================
+        // 21. GENERATE COMPLETE STANDALONE HTML
+        // ==========================================
+
+        function generateCompleteHTML() {
+
+            const heroHTML = generateHeroHTML();
+
+            const heroCSS = generateHeroCSS();
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
+
+    <!-- Shared hero stylesheet -->
+    <style type="text/tailwindcss">
+${heroCSS}
+    </style>
+
+</head>
+<body>
+
+${heroHTML}
+
+</body>
+</html>`;
+
+        }
+
+
+        // ==========================================
+        // 22. UPDATE MANUAL COPY TEXTAREA
+        // ==========================================
+
+        function updateFallbackHTML() {
+
+            fallbackTextarea.value = generateCompleteHTML();
+
+        }
+
+
+        // ==========================================
+        // 23. HANDLE PLAIN TEXT PASTING
+        // ==========================================
+
+        function handlePlainTextPaste(event) {
+
+            event.preventDefault();
+
+            // Get clipboard text without HTML formatting.
+            const plainText = event.clipboardData.getData("text/plain");
+
+            const selection = window.getSelection();
+
+            if (!selection || selection.rangeCount === 0) {
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+
+            // Remove selected text.
+            range.deleteContents();
+
+            // Insert plain text.
+            const textNode = document.createTextNode(plainText);
+
+            range.insertNode(textNode);
+
+            // Move cursor after inserted text.
+            range.setStartAfter(textNode);
+
+            range.collapse(true);
+
+            selection.removeAllRanges();
+
+            selection.addRange(range);
+
+            updateFallbackHTML();
+
+        }
+
+
+        // ==========================================
+        // 24. COPY HTML TO CLIPBOARD
+        // ==========================================
+
+        async function copyHTML() {
+
+            // Generate the latest HTML.
+            const html = generateCompleteHTML();
+
+            fallbackTextarea.value = html;
+
+            statusMessage.textContent = "";
+
+            try {
+
+                // Check Clipboard API availability.
+                if (
+                    !navigator.clipboard ||
+                    !navigator.clipboard.writeText
+                ) {
+
+                    throw new Error("Clipboard API unavailable");
+
+                }
+
+                // Copy generated HTML.
+                await navigator.clipboard.writeText(html);
+
+                // Show success only after copying succeeds.
+                statusMessage.textContent =
+                    "HTML copied—paste it into VS Code.";
+
+                fallbackContainer.hidden = true;
+
+            } catch (error) {
+
+                // Display manual copy option.
+                fallbackTextarea.value = html;
+
+                fallbackContainer.hidden = false;
+
+                statusMessage.textContent =
+                    "Automatic copying is unavailable. Use the textarea below to copy your HTML.";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // 25. CONNECT EVENT LISTENERS
+        // ==========================================
+
+        // Dark/light preset.
+        darkAppearance.addEventListener(
+            "change",
+            handlePresetChange
+        );
+
+        // General settings.
+        centreText.addEventListener("change", updateHero);
+
+        minimumHeight.addEventListener("change", updateHero);
+
+        showSubheading.addEventListener("change", updateHero);
+
+        // Gradient mode.
+        gradientBackground.addEventListener(
+            "change",
+            handleGradientChange
+        );
+
+        // Gradient direction.
+        gradientDirection.addEventListener("change", () => {
+
+            readSettings();
+
+            updateHero();
+
+        });
+
+        // H1 effects.
+        h1SerifFont.addEventListener("change", updateHero);
+
+        h1LetterSpacing.addEventListener("input", updateHero);
+
+        // H2 effects.
+        h2SerifFont.addEventListener("change", updateHero);
+
+        h2LetterSpacing.addEventListener("input", updateHero);
+
+        // Colour targets.
+        backgroundTarget.addEventListener("click", () => {
+            selectTarget("background");
+        });
+
+        startTarget.addEventListener("click", () => {
+            selectTarget("start");
+        });
+
+        endTarget.addEventListener("click", () => {
+            selectTarget("end");
+        });
+
+        h1Target.addEventListener("click", () => {
+            selectTarget("h1");
+        });
+
+        h2Target.addEventListener("click", () => {
+            selectTarget("h2");
+        });
+
+        // Heading text changes.
+        heroHeading.addEventListener("input", updateFallbackHTML);
+
+        heroSubheading.addEventListener("input", updateFallbackHTML);
+
+        // Plain text pasting.
+        heroHeading.addEventListener("paste", handlePlainTextPaste);
+
+        heroSubheading.addEventListener("paste", handlePlainTextPaste);
+
+        // Copy button.
+        copyButton.addEventListener("click", copyHTML);
+
+
+        // ==========================================
+        // 26. INITIALISE APPLICATION
+        // ==========================================
+
+        generatePalette();
+
+        updateHero();
+
+    </script>
+
+</body>
+</html>
