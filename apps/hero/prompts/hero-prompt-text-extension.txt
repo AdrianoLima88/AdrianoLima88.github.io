@@ -1,0 +1,1432 @@
+INSTRUCTIONS:
+
+Let's extend our existing Hero Block Generator.
+
+Use the current code supplied below as your starting point.
+
+Preserve all existing working features. Extend the existing settings object and named functions where appropriate.
+
+Include any new hero styling in the shared hero stylesheet so it is also included in the exported page.
+
+Add only the requested feature. Avoid unrelated redesigns or refactoring.
+
+NEW FEATURES:
+
+INSTRUCTIONS
+
+Let's adapt our existing Image Hero Block Generator to create hero blocks with a decorative video background.
+
+The current working app file is app-hero-image-v1.html. Create the new app, named app-hero-video-v1.html.
+
+Use the current code supplied below as your starting point.
+
+Preserve existing working features except those explicitly replaced below. Extend the existing settings object and named functions where appropriate. Avoid unrelated redesigns or refactoring.
+
+VIDEO BACKGROUND
+
+Replace the existing image background layer with a decorative video background.
+
+Assume this folder structure:
+
+- The app file is saved directly in the hero folder.
+- The video and poster image are saved in outputs/assets/videos.
+- Generated HTML pages will be saved directly in outputs.
+
+The supplied assets are:
+
+- hero-video.mp4: an MP4 video encoded with H.264.
+- hero-poster.jpg: a JPEG poster image.
+
+Use these exact relative paths in the app preview:
+
+- Video: outputs/assets/videos/hero-video.mp4
+- Poster: outputs/assets/videos/hero-poster.jpg
+
+Use these exact relative paths in the exported page:
+
+- Video: assets/videos/hero-video.mp4
+- Poster: assets/videos/hero-poster.jpg
+
+Define the exported paths once in JavaScript:
+
+const exportedVideoPath = "assets/videos/hero-video.mp4";
+const exportedPosterPath = "assets/videos/hero-poster.jpg";
+
+Use these constants when generating the exported video markup, poster fallback styling and poster preload link.
+
+Remove references to the previous hero-image.jpg asset.
+
+Do not add file uploads, asset selectors or URL inputs.
+
+VIDEO MARKUP AND LAYOUT
+
+Use a video element with:
+
+- muted
+- loop
+- playsinline
+- preload="metadata"
+- The appropriate poster attribute.
+- A source element with the appropriate video path and type="video/mp4".
+
+Treat the video as decorative:
+
+- Use aria-hidden="true".
+- Prevent keyboard focus.
+- Do not include native video controls.
+- Do not add a pause/play button.
+- Prevent the video layer from intercepting pointer events.
+
+Make the video fill the entire hero:
+
+- Position it absolutely within the hero.
+- Set its width and height to 100%.
+- Use object-fit: cover.
+- Use object-position: center.
+- Allow cropping without stretching.
+
+Preserve the semantic header element, responsive minimum heights and existing content spacing.
+
+Keep the video element in place when settings change. Editing text or changing colours, opacity, alignment or typography must not recreate the video or restart playback.
+
+POSTER AND PRELOAD
+
+Replace the previous image preload with a poster-image preload.
+
+In the head of the app, include:
+
+<link rel="preload" as="image" href="outputs/assets/videos/hero-poster.jpg">
+
+In the head of the exported page, include:
+
+<link rel="preload" as="image" href="assets/videos/hero-poster.jpg">
+
+Within each page, the preload, video poster attribute and poster fallback must reference exactly the same image path.
+
+Keep a poster fallback beneath the video. It should fill the hero using cover sizing and centred positioning.
+
+Show the poster until the video is actually playing. If the video cannot load or autoplay is blocked, leave the poster visible.
+
+Do not preload the video through a link element.
+
+PLAYBACK AND REDUCED MOTION
+
+Attempt muted autoplay when the page opens, unless the visitor prefers reduced motion.
+
+Use a small named playback-initialisation function:
+
+- Check prefers-reduced-motion before requesting playback.
+- Set the video’s muted property to true.
+- Call play() only when reduced motion is not requested.
+- Handle a rejected play() promise without an uncaught error.
+- Reveal the video after playback begins.
+- Keep the poster visible if playback fails.
+
+To avoid playback starting before the reduced-motion check, omit the autoplay attribute and initiate playback through this function.
+
+When reduced motion is requested, display the poster without starting the video.
+
+Listen for changes to the reduced-motion preference:
+
+- If reduced motion becomes enabled, pause and hide the video, revealing the poster.
+- If reduced motion becomes disabled, attempt muted playback again.
+
+Do not repeatedly retry blocked autoplay.
+
+Use the same playback behaviour in the app preview and exported page. Keep playback logic separate from the generator's editing and settings functions.
+
+OVERLAY AND EXISTING FEATURES
+
+Preserve the existing tinted overlay above the video and below the heading content.
+
+Defaults:
+
+- Solid black overlay.
+- Opacity: 0.4.
+- Gradient overlay: off.
+- H1 and H2 text: white.
+
+Preserve:
+
+- Overlay opacity slider from 0.1 to 0.9, step 0.05.
+- Solid overlay colour selection.
+- Gradient overlay checkbox.
+- Independent gradient start and end colours.
+- All four gradient directions.
+- Saved colour, direction and opacity settings when switching modes.
+- Tailwind colour palette and its active-target behaviour.
+- Independent H1 and H2 colours.
+- Direct plain-text heading editing.
+- Optional H2 and its Show subheading checkbox.
+- Independent font-family choices.
+- Independent letter-spacing sliders.
+- Left or centre alignment.
+- Minimum-height checkbox and existing responsive heights.
+- Fixed text-shadow-lg/30 effect on both headings.
+- Accessible labels, keyboard operation and visible focus.
+
+Apply opacity only to the overlay. Do not fade the video or heading content.
+
+Disable H2 controls and its palette target while H2 is hidden. Preserve its text and settings when restored.
+
+If H2 was the active palette target when hidden, select Start colour in gradient mode or Overlay colour in solid mode.
+
+HTML AND CSS
+
+Keep all styling in style elements in the head.
+
+Use named classes, Tailwind @apply and ordinary CSS where appropriate. Do not use inline style attributes.
+
+Retain:
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+Place styles containing @apply in style elements with type="text/tailwindcss".
+
+Use clearly named classes for:
+
+- Poster fallback.
+- Video.
+- Overlay.
+- Heading content.
+
+Establish their stacking order explicitly:
+
+1. Poster fallback.
+2. Video.
+3. Tinted overlay.
+4. Heading content.
+
+Keep the hero styles shared between preview and export wherever possible. Handle their different asset paths explicitly.
+
+Preserve Tailwind palette variables and CSS linear-gradient() for overlay colours. Ensure all required styling is included in the exported page.
+
+COPY HTML
+
+Preserve the fixed Copy HTML button, accessible status message and manual-copy fallback.
+
+Export a complete standalone HTML document containing:
+
+- HTML5 doctype and lang="en".
+- Charset, responsive viewport and title.
+- The existing meta description:
+  “Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.”
+- The hosted Tailwind script.
+- The poster-image preload.
+- All required hero, poster, video, overlay and heading styles in the head.
+- The semantic hero markup with the current heading text and selected settings.
+- H2 only when Show subheading is checked.
+- The small playback script required for autoplay, poster fallback and reduced-motion behaviour.
+
+The playback script is an explicit exception to the previous rule excluding JavaScript from exported pages.
+
+Exclude:
+
+- Generator controls and settings-management code.
+- Editing attributes and editing outlines.
+- Editor-only CSS.
+- Copy HTML button and copying code.
+- Manual-copy interface.
+
+Use only assets/videos paths in the exported page. Do not include outputs/assets/videos paths or references to the old image asset.
+
+Continue escaping edited text correctly. Keep any visible manual-copy output up to date.
+
+Only display a copying-success message after copying succeeds.
+
+Ensure closing script tags inside JavaScript strings are escaped correctly so they do not prematurely end the generator's script.
+
+SCOPE
+
+Do not add playback buttons, native video controls, uploads, asset selectors, URL inputs or unrelated features.
+
+Preserve the existing interface layout wherever possible.
+
+DELIVERY
+
+Return the complete app-hero-video-v1.html code in one HTML code block, without omissions. Include all required JavaScript.
+
+After the code, briefly explain where to save:
+
+- App: hero/app-hero-video-v1.html
+- Video: hero/outputs/assets/videos/hero-video.mp4
+- Poster: hero/outputs/assets/videos/hero-poster.jpg
+- Generated page, for example: hero/outputs/hero-video.html
+
+Explain that generated pages must be saved directly in outputs for their relative asset paths to work.
+
+Include a short manual checklist covering:
+
+- Video and poster loading in both the app and exported page.
+- Matching poster preload, poster attribute and fallback paths.
+- Muted, looping playback when autoplay is permitted.
+- Poster fallback when playback is blocked or the video is unavailable.
+- Poster-only display when reduced motion is enabled.
+- Responsive cropping without stretching.
+- Solid and gradient overlays, all four directions and opacity.
+- Heading editing without restarting playback.
+- Existing text controls and H2 visibility.
+- Copy HTML, manual-copy fallback and the exported result.
+
+Clearly state whether the app has actually been browser-tested.
+
+
+
+
+Return the complete updated HTML in one code block.
+
+
+CURRENT CODE:
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block Generator</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- SHARED HERO STYLES: Preview and exported HTML -->
+    <style type="text/tailwindcss">
+
+        /* Main hero container */
+        .hero {
+            @apply flex items-center w-full px-6 py-16 md:px-16 md:py-24;
+        }
+
+        /* Content container */
+        .hero-content {
+            @apply w-full max-w-5xl;
+        }
+
+        /* Light appearance */
+        .hero-light {
+            @apply bg-slate-50;
+        }
+
+        .hero-light h1 {
+            @apply text-slate-900;
+        }
+
+        .hero-light h2 {
+            @apply text-slate-700;
+        }
+
+        /* Dark appearance */
+        .hero-dark {
+            @apply bg-slate-900;
+        }
+
+        .hero-dark h1 {
+            @apply text-slate-50;
+        }
+
+        .hero-dark h2 {
+            @apply text-slate-300;
+        }
+
+        /* Centre alignment */
+        .hero-centre {
+            @apply text-center;
+        }
+
+        .hero-centre .hero-content {
+            margin-inline: auto;
+        }
+
+        /* Minimum height */
+        .hero-min-height {
+            @apply min-h-[480px];
+        }
+
+        @media (min-width: 768px) {
+            .hero-min-height {
+                min-height: 85vh;
+            }
+        }
+
+        /* H1 typography */
+        .hero h1 {
+            @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        /* H2 typography */
+        .hero h2 {
+            @apply mt-6 text-lg leading-relaxed md:text-2xl;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        /* H1 font families */
+        .hero h1.hero-h1-sans {
+            @apply font-sans;
+        }
+
+        .hero h1.hero-h1-serif {
+            @apply font-serif;
+        }
+
+        /* H2 font families */
+        .hero h2.hero-h2-sans {
+            @apply font-sans;
+        }
+
+        .hero h2.hero-h2-serif {
+            @apply font-serif;
+        }
+
+        /* Hidden subheading */
+        .hero h2[hidden] {
+            display: none !important;
+        }
+
+    </style>
+
+    <!-- DYNAMIC LETTER SPACING STYLES -->
+    <style id="letterSpacingStyles" type="text/tailwindcss">
+
+        .hero h1 {
+            letter-spacing: -0.05em;
+        }
+
+        .hero h2 {
+            letter-spacing: -0.025em;
+        }
+
+    </style>
+
+    <!-- EDITOR INTERFACE STYLES: Not exported -->
+    <style type="text/tailwindcss">
+
+        body {
+            @apply min-h-screen bg-white text-slate-800;
+        }
+
+        .app-container {
+            @apply mx-auto w-full max-w-7xl px-4 py-6 md:px-8 pb-24;
+        }
+
+        .app-title {
+            @apply mb-2 text-2xl font-bold tracking-tight text-slate-900;
+        }
+
+        .app-description {
+            @apply mb-6 text-sm text-slate-500;
+        }
+
+        .control-panel {
+            @apply mb-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm;
+        }
+
+        .control-heading {
+            @apply mb-3 text-sm font-semibold text-slate-800;
+        }
+
+        .control-list {
+            @apply flex flex-wrap items-center gap-x-6 gap-y-4;
+        }
+
+        .control-label {
+            @apply flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700;
+        }
+
+        .control-checkbox {
+            @apply h-4 w-4 cursor-pointer accent-blue-600;
+        }
+
+        .control-checkbox:focus-visible,
+        .control-slider:focus-visible {
+            outline: 3px solid #3b82f6;
+            outline-offset: 3px;
+        }
+
+        /* Text effect groups */
+        .effects-container {
+            @apply mt-5 grid grid-cols-1 gap-4 md:grid-cols-2;
+        }
+
+        .effect-group {
+            @apply rounded-lg border border-slate-200 bg-slate-50 p-4;
+        }
+
+        .effect-heading {
+            @apply mb-4 text-sm font-bold text-slate-800;
+        }
+
+        .effect-checkbox-label {
+            @apply mb-4 flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-700;
+        }
+
+        .slider-container {
+            @apply flex flex-col gap-2;
+        }
+
+        .slider-header {
+            @apply flex items-center justify-between gap-2;
+        }
+
+        .slider-label {
+            @apply text-sm font-medium text-slate-700;
+        }
+
+        .slider-value {
+            @apply rounded-md bg-white px-2 py-1 font-mono text-xs font-semibold text-blue-700;
+        }
+
+        .control-slider {
+            @apply w-full cursor-pointer accent-blue-600;
+        }
+
+        .effect-group:has(input:disabled) {
+            @apply opacity-60;
+        }
+
+        .instruction {
+            @apply mb-3 text-sm text-slate-500;
+        }
+
+        .preview-container {
+            @apply overflow-hidden rounded-xl border border-slate-200 shadow-sm;
+        }
+
+        .editable-heading {
+            cursor: text;
+        }
+
+        .editable-heading:focus {
+            outline: 3px solid #3b82f6;
+            outline-offset: 5px;
+            border-radius: 3px;
+        }
+
+        .export-button {
+            @apply fixed bottom-5 right-5 z-50 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-blue-700 active:bg-blue-800;
+        }
+
+        .export-button:focus-visible {
+            outline: 3px solid #2563eb;
+            outline-offset: 4px;
+        }
+
+        .status-message {
+            @apply mt-4 text-sm font-medium text-slate-700;
+        }
+
+        .fallback-container {
+            @apply mt-5 rounded-xl border border-slate-200 bg-white p-4;
+        }
+
+        .fallback-label {
+            @apply mb-2 block text-sm font-semibold text-slate-800;
+        }
+
+        .fallback-textarea {
+            @apply w-full rounded-lg border border-slate-300 p-3 font-mono text-xs text-slate-800;
+        }
+
+        .fallback-textarea:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="app-container">
+
+        <!-- APPLICATION INTRODUCTION -->
+        <section aria-labelledby="app-title">
+
+            <h1 id="app-title" class="app-title">
+                Hero Block Generator
+            </h1>
+
+            <p class="app-description">
+                Create and customise a responsive hero section using Tailwind CSS.
+            </p>
+
+        </section>
+
+
+        <!-- GENERAL HERO SETTINGS -->
+        <section class="control-panel" aria-labelledby="control-heading">
+
+            <h2 id="control-heading" class="control-heading">
+                Hero settings
+            </h2>
+
+            <div class="control-list">
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="darkAppearance"
+                        class="control-checkbox"
+                    >
+                    Dark appearance
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="centreText"
+                        class="control-checkbox"
+                    >
+                    Centre text
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="minimumHeight"
+                        class="control-checkbox"
+                        checked
+                    >
+                    Minimum height
+                </label>
+
+                <label class="control-label">
+                    <input
+                        type="checkbox"
+                        id="showSubheading"
+                        class="control-checkbox"
+                        checked
+                    >
+                    Show subheading
+                </label>
+
+            </div>
+
+
+            <!-- TEXT EFFECT CONTROLS -->
+            <div class="effects-container">
+
+                <!-- H1 EFFECTS -->
+                <section class="effect-group" aria-labelledby="h1EffectsTitle">
+
+                    <h3 id="h1EffectsTitle" class="effect-heading">
+                        H1 text effects
+                    </h3>
+
+                    <label class="effect-checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            id="h1SerifFont"
+                            class="control-checkbox"
+                        >
+
+                        Serif font
+
+                    </label>
+
+                    <div class="slider-container">
+
+                        <div class="slider-header">
+
+                            <label
+                                for="h1LetterSpacing"
+                                class="slider-label"
+                            >
+                                Letter spacing
+                            </label>
+
+                            <output
+                                id="h1SpacingValue"
+                                class="slider-value"
+                                for="h1LetterSpacing"
+                            >-0.05em</output>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="h1LetterSpacing"
+                            class="control-slider"
+                            min="-0.05"
+                            max="0.10"
+                            step="0.005"
+                            value="-0.05"
+                        >
+
+                    </div>
+
+                </section>
+
+
+                <!-- H2 EFFECTS -->
+                <section class="effect-group" aria-labelledby="h2EffectsTitle">
+
+                    <h3 id="h2EffectsTitle" class="effect-heading">
+                        H2 text effects
+                    </h3>
+
+                    <label class="effect-checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            id="h2SerifFont"
+                            class="control-checkbox"
+                        >
+
+                        Serif font
+
+                    </label>
+
+                    <div class="slider-container">
+
+                        <div class="slider-header">
+
+                            <label
+                                for="h2LetterSpacing"
+                                class="slider-label"
+                            >
+                                Letter spacing
+                            </label>
+
+                            <output
+                                id="h2SpacingValue"
+                                class="slider-value"
+                                for="h2LetterSpacing"
+                            >-0.025em</output>
+
+                        </div>
+
+                        <input
+                            type="range"
+                            id="h2LetterSpacing"
+                            class="control-slider"
+                            min="-0.05"
+                            max="0.10"
+                            step="0.005"
+                            value="-0.025"
+                        >
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </section>
+
+
+        <!-- EDITING INSTRUCTIONS -->
+        <p class="instruction">
+            Click a heading to edit the text.
+        </p>
+
+
+        <!-- HERO PREVIEW -->
+        <section class="preview-container" aria-label="Hero preview">
+
+            <header
+                id="heroPreview"
+                class="hero hero-light hero-min-height"
+            >
+
+                <div class="hero-content">
+
+                    <h1
+                        id="heroHeading"
+                        class="editable-heading hero-h1-sans"
+                        contenteditable="true"
+                        role="textbox"
+                        aria-label="Edit hero main heading"
+                        aria-multiline="true"
+                        spellcheck="false"
+                    >Lorem ipsum dolor sit amet</h1>
+
+                    <h2
+                        id="heroSubheading"
+                        class="editable-heading hero-h2-sans"
+                        contenteditable="true"
+                        role="textbox"
+                        aria-label="Edit hero subheading"
+                        aria-multiline="true"
+                        spellcheck="false"
+                    >Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+
+                </div>
+
+            </header>
+
+        </section>
+
+
+        <!-- COPY FEEDBACK -->
+        <p
+            id="statusMessage"
+            class="status-message"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+
+        <!-- MANUAL COPY FALLBACK -->
+        <section
+            id="fallbackContainer"
+            class="fallback-container"
+            hidden
+            aria-labelledby="fallbackLabel"
+        >
+
+            <label
+                id="fallbackLabel"
+                for="fallbackTextarea"
+                class="fallback-label"
+            >
+                Copy your HTML manually
+            </label>
+
+            <textarea
+                id="fallbackTextarea"
+                class="fallback-textarea"
+                rows="12"
+                readonly
+                spellcheck="false"
+            ></textarea>
+
+            <p class="mt-2 text-xs text-slate-500">
+                Select the HTML above and copy it into a new HTML file.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- FIXED COPY BUTTON -->
+    <button
+        type="button"
+        id="copyButton"
+        class="export-button"
+    >
+        Copy HTML
+    </button>
+
+
+    <script>
+
+        // ==========================================
+        // 1. GET HTML ELEMENTS
+        // ==========================================
+
+        const heroPreview = document.getElementById("heroPreview");
+
+        const heroHeading = document.getElementById("heroHeading");
+
+        const heroSubheading = document.getElementById("heroSubheading");
+
+        // General settings
+        const darkAppearance = document.getElementById("darkAppearance");
+
+        const centreText = document.getElementById("centreText");
+
+        const minimumHeight = document.getElementById("minimumHeight");
+
+        const showSubheading = document.getElementById("showSubheading");
+
+        // H1 effects
+        const h1SerifFont = document.getElementById("h1SerifFont");
+
+        const h1LetterSpacing = document.getElementById("h1LetterSpacing");
+
+        const h1SpacingValue = document.getElementById("h1SpacingValue");
+
+        // H2 effects
+        const h2SerifFont = document.getElementById("h2SerifFont");
+
+        const h2LetterSpacing = document.getElementById("h2LetterSpacing");
+
+        const h2SpacingValue = document.getElementById("h2SpacingValue");
+
+        // Other elements
+        const letterSpacingStyles = document.getElementById("letterSpacingStyles");
+
+        const copyButton = document.getElementById("copyButton");
+
+        const statusMessage = document.getElementById("statusMessage");
+
+        const fallbackContainer = document.getElementById("fallbackContainer");
+
+        const fallbackTextarea = document.getElementById("fallbackTextarea");
+
+
+        // ==========================================
+        // 2. SETTINGS OBJECT
+        // ==========================================
+
+        const settings = {
+
+            // General settings
+            darkAppearance: false,
+            centreText: false,
+            minimumHeight: true,
+            showSubheading: true,
+
+            // H1 effects
+            h1SerifFont: false,
+            h1LetterSpacing: -0.05,
+
+            // H2 effects
+            h2SerifFont: false,
+            h2LetterSpacing: -0.025
+
+        };
+
+
+        // ==========================================
+        // 3. READ CURRENT SETTINGS
+        // ==========================================
+
+        function readSettings() {
+
+            // Read checkbox values.
+            settings.darkAppearance = darkAppearance.checked;
+
+            settings.centreText = centreText.checked;
+
+            settings.minimumHeight = minimumHeight.checked;
+
+            settings.showSubheading = showSubheading.checked;
+
+            settings.h1SerifFont = h1SerifFont.checked;
+
+            settings.h2SerifFont = h2SerifFont.checked;
+
+            // Read numeric slider values.
+            settings.h1LetterSpacing = Number(h1LetterSpacing.value);
+
+            settings.h2LetterSpacing = Number(h2LetterSpacing.value);
+
+        }
+
+
+        // ==========================================
+        // 4. FORMAT LETTER SPACING VALUE
+        // ==========================================
+
+        function formatLetterSpacing(value) {
+
+            return Number(value).toFixed(3)
+                .replace(/0+$/, "")
+                .replace(/\.$/, "") + "em";
+
+        }
+
+
+        // ==========================================
+        // 5. UPDATE LETTER SPACING CSS
+        // ==========================================
+
+        function updateLetterSpacing() {
+
+            // Update the visible slider values.
+            h1SpacingValue.textContent =
+                formatLetterSpacing(settings.h1LetterSpacing);
+
+            h2SpacingValue.textContent =
+                formatLetterSpacing(settings.h2LetterSpacing);
+
+            // Generate heading-specific CSS.
+            // Values come from restricted native range sliders.
+            const spacingCSS = `
+
+.hero h1 {
+    letter-spacing: ${settings.h1LetterSpacing}em;
+}
+
+.hero h2 {
+    letter-spacing: ${settings.h2LetterSpacing}em;
+}
+
+            `.trim();
+
+            // Update the dedicated stylesheet.
+            letterSpacingStyles.textContent = spacingCSS;
+
+        }
+
+
+        // ==========================================
+        // 6. UPDATE HERO PREVIEW
+        // ==========================================
+
+        function updateHero() {
+
+            // Read the latest settings.
+            readSettings();
+
+            // Update appearance.
+            heroPreview.classList.toggle(
+                "hero-dark",
+                settings.darkAppearance
+            );
+
+            heroPreview.classList.toggle(
+                "hero-light",
+                !settings.darkAppearance
+            );
+
+            // Update alignment.
+            heroPreview.classList.toggle(
+                "hero-centre",
+                settings.centreText
+            );
+
+            // Update minimum height.
+            heroPreview.classList.toggle(
+                "hero-min-height",
+                settings.minimumHeight
+            );
+
+            // Update H1 font.
+            heroHeading.classList.toggle(
+                "hero-h1-serif",
+                settings.h1SerifFont
+            );
+
+            heroHeading.classList.toggle(
+                "hero-h1-sans",
+                !settings.h1SerifFont
+            );
+
+            // Update H2 font.
+            heroSubheading.classList.toggle(
+                "hero-h2-serif",
+                settings.h2SerifFont
+            );
+
+            heroSubheading.classList.toggle(
+                "hero-h2-sans",
+                !settings.h2SerifFont
+            );
+
+            // Show or hide H2 without deleting its content.
+            heroSubheading.hidden = !settings.showSubheading;
+
+            // Disable H2 effect controls when H2 is hidden.
+            h2SerifFont.disabled = !settings.showSubheading;
+
+            h2LetterSpacing.disabled = !settings.showSubheading;
+
+            // Update letter spacing.
+            updateLetterSpacing();
+
+            // Update manual export.
+            updateFallbackHTML();
+
+        }
+
+
+        // ==========================================
+        // 7. ESCAPE HTML TEXT
+        // ==========================================
+
+        function escapeHTML(text) {
+
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+
+        }
+
+
+        // ==========================================
+        // 8. GENERATE EXPORTED HERO HTML
+        // ==========================================
+
+        function generateHeroHTML() {
+
+            // Read the latest heading text.
+            const headingText = escapeHTML(heroHeading.textContent);
+
+            const subheadingText = escapeHTML(heroSubheading.textContent);
+
+            // Build hero classes from the current settings.
+            const heroClasses = [
+                "hero",
+                settings.darkAppearance ? "hero-dark" : "hero-light",
+                settings.centreText ? "hero-centre" : "",
+                settings.minimumHeight ? "hero-min-height" : ""
+            ].filter(Boolean).join(" ");
+
+            // Select H1 font class.
+            const h1FontClass = settings.h1SerifFont
+                ? "hero-h1-serif"
+                : "hero-h1-sans";
+
+            // Select H2 font class.
+            const h2FontClass = settings.h2SerifFont
+                ? "hero-h2-serif"
+                : "hero-h2-sans";
+
+            // Add H2 only when enabled.
+            let subheadingHTML = "";
+
+            if (settings.showSubheading) {
+
+                subheadingHTML = `
+        <h2 class="${h2FontClass}">${subheadingText}</h2>
+                `.trim();
+
+            }
+
+            // Return semantic hero HTML.
+            return `
+<header class="${heroClasses}">
+    <div class="hero-content">
+        <h1 class="${h1FontClass}">${headingText}</h1>
+        ${subheadingHTML}
+    </div>
+</header>
+            `.trim();
+
+        }
+
+
+        // ==========================================
+        // 9. GENERATE SHARED HERO CSS
+        // ==========================================
+
+        function generateHeroCSS() {
+
+            return `
+
+/* Main hero container */
+.hero {
+    @apply flex items-center w-full px-6 py-16 md:px-16 md:py-24;
+}
+
+/* Content container */
+.hero-content {
+    @apply w-full max-w-5xl;
+}
+
+/* Light appearance */
+.hero-light {
+    @apply bg-slate-50;
+}
+
+.hero-light h1 {
+    @apply text-slate-900;
+}
+
+.hero-light h2 {
+    @apply text-slate-700;
+}
+
+/* Dark appearance */
+.hero-dark {
+    @apply bg-slate-900;
+}
+
+.hero-dark h1 {
+    @apply text-slate-50;
+}
+
+.hero-dark h2 {
+    @apply text-slate-300;
+}
+
+/* Centre alignment */
+.hero-centre {
+    @apply text-center;
+}
+
+.hero-centre .hero-content {
+    margin-inline: auto;
+}
+
+/* Minimum height */
+.hero-min-height {
+    @apply min-h-[480px];
+}
+
+@media (min-width: 768px) {
+    .hero-min-height {
+        min-height: 85vh;
+    }
+}
+
+/* H1 typography */
+.hero h1 {
+    @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* H2 typography */
+.hero h2 {
+    @apply mt-6 text-lg leading-relaxed md:text-2xl;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* H1 font families */
+.hero h1.hero-h1-sans {
+    @apply font-sans;
+}
+
+.hero h1.hero-h1-serif {
+    @apply font-serif;
+}
+
+/* H2 font families */
+.hero h2.hero-h2-sans {
+    @apply font-sans;
+}
+
+.hero h2.hero-h2-serif {
+    @apply font-serif;
+}
+
+/* Hidden subheading */
+.hero h2[hidden] {
+    display: none !important;
+}
+
+            `.trim();
+
+        }
+
+
+        // ==========================================
+        // 10. GENERATE LETTER SPACING CSS
+        // ==========================================
+
+        function generateLetterSpacingCSS() {
+
+            return `
+
+.hero h1 {
+    letter-spacing: ${settings.h1LetterSpacing}em;
+}
+
+.hero h2 {
+    letter-spacing: ${settings.h2LetterSpacing}em;
+}
+
+            `.trim();
+
+        }
+
+
+        // ==========================================
+        // 11. GENERATE COMPLETE STANDALONE HTML
+        // ==========================================
+
+        function generateCompleteHTML() {
+
+            // Generate current hero.
+            const heroHTML = generateHeroHTML();
+
+            // Generate shared styles.
+            const heroCSS = generateHeroCSS();
+
+            // Generate letter spacing styles.
+            const spacingCSS = generateLetterSpacingCSS();
+
+            // Return the complete standalone document.
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script>
+
+    <!-- Shared hero styles -->
+    <style type="text/tailwindcss">
+${heroCSS}
+    </style>
+
+    <!-- Heading letter spacing -->
+    <style type="text/tailwindcss">
+${spacingCSS}
+    </style>
+
+</head>
+<body>
+
+${heroHTML}
+
+</body>
+</html>`;
+
+        }
+
+
+        // ==========================================
+        // 12. UPDATE MANUAL COPY TEXTAREA
+        // ==========================================
+
+        function updateFallbackHTML() {
+
+            fallbackTextarea.value = generateCompleteHTML();
+
+        }
+
+
+        // ==========================================
+        // 13. HANDLE PLAIN TEXT PASTING
+        // ==========================================
+
+        function handlePlainTextPaste(event) {
+
+            event.preventDefault();
+
+            // Get clipboard text without HTML formatting.
+            const plainText = event.clipboardData.getData("text/plain");
+
+            const selection = window.getSelection();
+
+            if (!selection || selection.rangeCount === 0) {
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+
+            // Remove the selected text.
+            range.deleteContents();
+
+            // Insert plain text.
+            const textNode = document.createTextNode(plainText);
+
+            range.insertNode(textNode);
+
+            // Position the cursor after inserted text.
+            range.setStartAfter(textNode);
+
+            range.collapse(true);
+
+            selection.removeAllRanges();
+
+            selection.addRange(range);
+
+            // Update exported HTML.
+            updateFallbackHTML();
+
+        }
+
+
+        // ==========================================
+        // 14. COPY HTML TO CLIPBOARD
+        // ==========================================
+
+        async function copyHTML() {
+
+            // Generate the latest HTML.
+            const html = generateCompleteHTML();
+
+            // Update the manual copy textarea.
+            fallbackTextarea.value = html;
+
+            statusMessage.textContent = "";
+
+            try {
+
+                // Check Clipboard API availability.
+                if (!navigator.clipboard || !navigator.clipboard.writeText) {
+
+                    throw new Error("Clipboard API unavailable");
+
+                }
+
+                // Copy the generated HTML.
+                await navigator.clipboard.writeText(html);
+
+                // Display success only after copying succeeds.
+                statusMessage.textContent =
+                    "HTML copied—paste it into VS Code.";
+
+                fallbackContainer.hidden = true;
+
+            } catch (error) {
+
+                // Show manual copy option.
+                fallbackTextarea.value = html;
+
+                fallbackContainer.hidden = false;
+
+                statusMessage.textContent =
+                    "Automatic copying is unavailable. Use the textarea below to copy your HTML.";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // 15. CONNECT EVENT LISTENERS
+        // ==========================================
+
+        // General checkbox settings.
+        darkAppearance.addEventListener("change", updateHero);
+
+        centreText.addEventListener("change", updateHero);
+
+        minimumHeight.addEventListener("change", updateHero);
+
+        showSubheading.addEventListener("change", updateHero);
+
+
+        // H1 effects.
+        h1SerifFont.addEventListener("change", updateHero);
+
+        h1LetterSpacing.addEventListener("input", updateHero);
+
+
+        // H2 effects.
+        h2SerifFont.addEventListener("change", updateHero);
+
+        h2LetterSpacing.addEventListener("input", updateHero);
+
+
+        // Update HTML when heading text changes.
+        heroHeading.addEventListener("input", updateFallbackHTML);
+
+        heroSubheading.addEventListener("input", updateFallbackHTML);
+
+
+        // Prevent rich-text formatting when pasting.
+        heroHeading.addEventListener("paste", handlePlainTextPaste);
+
+        heroSubheading.addEventListener("paste", handlePlainTextPaste);
+
+
+        // Copy button.
+        copyButton.addEventListener("click", copyHTML);
+
+
+        // ==========================================
+        // 16. INITIALISE APPLICATION
+        // ==========================================
+
+        // Apply default settings.
+        updateHero();
+
+    </script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Shared hero styles -->
+    <style type="text/tailwindcss">
+/* Main hero container */
+.hero {
+    @apply flex items-center w-full px-6 py-16 md:px-16 md:py-24;
+}
+
+/* Content container */
+.hero-content {
+    @apply w-full max-w-5xl;
+}
+
+/* Light appearance */
+.hero-light {
+    @apply bg-slate-50;
+}
+
+.hero-light h1 {
+    @apply text-slate-900;
+}
+
+.hero-light h2 {
+    @apply text-slate-700;
+}
+
+/* Dark appearance */
+.hero-dark {
+    @apply bg-slate-900;
+}
+
+.hero-dark h1 {
+    @apply text-slate-50;
+}
+
+.hero-dark h2 {
+    @apply text-slate-300;
+}
+
+/* Centre alignment */
+.hero-centre {
+    @apply text-center;
+}
+
+.hero-centre .hero-content {
+    margin-inline: auto;
+}
+
+/* Minimum height */
+.hero-min-height {
+    @apply min-h-[480px];
+}
+
+@media (min-width: 768px) {
+    .hero-min-height {
+        min-height: 85vh;
+    }
+}
+
+/* H1 typography */
+.hero h1 {
+    @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* H2 typography */
+.hero h2 {
+    @apply mt-6 text-lg leading-relaxed md:text-2xl;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* H1 font families */
+.hero h1.hero-h1-sans {
+    @apply font-sans;
+}
+
+.hero h1.hero-h1-serif {
+    @apply font-serif;
+}
+
+/* H2 font families */
+.hero h2.hero-h2-sans {
+    @apply font-sans;
+}
+
+.hero h2.hero-h2-serif {
+    @apply font-serif;
+}
+
+/* Hidden subheading */
+.hero h2[hidden] {
+    display: none !important;
+}
+    </style>
+
+    <!-- Heading letter spacing -->
+    <style type="text/tailwindcss">
+.hero h1 {
+    letter-spacing: -0.05em;
+}
+
+.hero h2 {
+    letter-spacing: 0.085em;
+}
+    </style>
+
+</head>
+<body>
+
+<header class="hero hero-dark hero-centre hero-min-height">
+    <div class="hero-content">
+        <h1 class="hero-h1-serif">Lorem ipsum dolor sit amet</h1>
+        <h2 class="hero-h2-serif">Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+    </div>
+</header>
+
+</body>
+</html>

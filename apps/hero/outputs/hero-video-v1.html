@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hero Block</title>
+
+    <meta name="description" content="Short, unique description of web page. Often used as the snippet shown in search results. About 120 characters is ideal.">
+
+    <link rel="preload" as="image" href="assets/videos/hero-poster.jpg">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Shared hero styles -->
+    <style type="text/tailwindcss">
+/* Main hero container */
+.hero {
+    @apply relative isolate flex w-full items-center overflow-hidden px-6 py-16 md:px-16 md:py-24;
+}
+
+/* Layer 1: poster fallback */
+.hero-poster {
+    @apply absolute inset-0 z-0;
+    background-image: url("assets/videos/hero-poster.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+/* Layer 2: video background */
+.hero-video {
+    @apply pointer-events-none absolute inset-0 z-10 h-full w-full;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+
+.hero-video.is-playing {
+    opacity: 1;
+}
+
+/* Layer 3: overlay */
+.hero-overlay {
+    @apply pointer-events-none absolute inset-0 z-20;
+    background-color: var(--color-black);
+    background-image: none;
+    opacity: 0.4;
+    background-image: linear-gradient(to right, var(--color-blue-600), var(--color-blue-500));
+}
+
+/* Layer 4: content */
+.hero-content {
+    @apply relative z-30 w-full max-w-5xl;
+}
+
+/* Centre alignment */
+.hero-centre {
+    @apply text-center;
+}
+.hero-centre .hero-content {
+    margin-inline: auto;
+}
+
+/* Minimum height */
+.hero-min-height {
+    @apply min-h-[480px];
+}
+@media (min-width: 768px) {
+    .hero-min-height {
+        min-height: 85vh;
+    }
+}
+
+/* H1 typography and shadow */
+.hero h1 {
+    @apply text-4xl font-bold tracking-tight leading-tight md:text-6xl text-shadow-lg/30;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    color: var(--color-white);
+}
+
+/* H2 typography and shadow */
+.hero h2 {
+    @apply mt-6 text-lg leading-relaxed md:text-2xl text-shadow-lg/30;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    color: var(--color-white);
+}
+
+/* Font families */
+.hero h1.hero-h1-sans {
+    @apply font-sans;
+}
+.hero h1.hero-h1-serif {
+    @apply font-serif;
+}
+.hero h2.hero-h2-sans {
+    @apply font-sans;
+}
+.hero h2.hero-h2-serif {
+    @apply font-serif;
+}
+
+/* Hidden subheading */
+.hero h2[hidden] {
+    display: none !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .hero-video {
+        transition: none;
+    }
+}
+    </style>
+
+    <!-- Heading letter spacing -->
+    <style type="text/tailwindcss">
+.hero h1 {
+    letter-spacing: -0.05em;
+}
+.hero h2 {
+    letter-spacing: -0.025em;
+}
+    </style>
+</head>
+<body>
+
+<header class="hero hero-centre hero-min-height">
+    <div class="hero-poster" aria-hidden="true"></div>
+
+    <video
+        class="hero-video"
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="assets/videos/hero-poster.jpg"
+        aria-hidden="true"
+        tabindex="-1"
+    >
+        <source src="assets/videos/hero-video.mp4" type="video/mp4">
+    </video>
+
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+        <h1 class="hero-h1-sans">Lorem ipsum dolor sit amet</h1>
+        <h2 class="hero-h2-sans">Consectetur adipiscing elit. Integer vitae libero ac risus egestas placerat.</h2>
+    </div>
+</header>
+
+<script>
+(function () {
+    const video = document.querySelector(".hero-video");
+
+    if (!video) return;
+
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    function revealVideo() {
+        video.classList.add("is-playing");
+    }
+
+    function hideVideo() {
+        video.classList.remove("is-playing");
+    }
+
+    async function attemptPlayback() {
+        if (reducedMotionQuery.matches) {
+            video.pause();
+            hideVideo();
+            return;
+        }
+
+        video.muted = true;
+
+        try {
+            const playPromise = video.play();
+
+            if (playPromise && typeof playPromise.then === "function") {
+                await playPromise;
+            }
+        } catch (error) {
+            hideVideo();
+        }
+    }
+
+    video.addEventListener("playing", revealVideo);
+
+    video.addEventListener("pause", hideVideo);
+    video.addEventListener("error", hideVideo);
+
+    function handleMotionPreferenceChange(event) {
+        if (event.matches) {
+            video.pause();
+            hideVideo();
+        } else {
+            attemptPlayback();
+        }
+    }
+
+    if (typeof reducedMotionQuery.addEventListener === "function") {
+        reducedMotionQuery.addEventListener("change", handleMotionPreferenceChange);
+    } else {
+        reducedMotionQuery.addListener(handleMotionPreferenceChange);
+    }
+
+    attemptPlayback();
+})();
+</script>
+
+</body>
+</html>
